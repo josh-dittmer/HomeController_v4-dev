@@ -1,0 +1,10 @@
+services:
+    homecontroller_dev:
+        build: "."
+        ports:
+            - "3000:3000"
+            - "42069:42069"
+            - "42070:42070"
+        volumes:
+            - "../..:/app"
+        container_name: "homecontroller_dev"
