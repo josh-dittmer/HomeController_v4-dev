@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM docker:latest
 LABEL Description="HomeController development environment"
 
 RUN apt -y update && apt install -y
@@ -6,17 +6,22 @@ RUN apt install -y g++ make cmake git unzip python-setuptools python3-setuptools
 
 # install docker and docker compose
 
-RUN install -m 0755 -d /etc/apt/keyrings
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-RUN chmod a+r /etc/apt/keyrings/docker.asc
+#RUN install -m 0755 -d /etc/apt/keyrings
+#RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+#RUN chmod a+r /etc/apt/keyrings/docker.asc
 
-RUN echo \
-    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-    tee /etc/apt/sources.list.d/docker.list > /dev/null
+#RUN echo \
+#    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+#    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+#    tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-RUN apt-get update
-RUN apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+#RUN apt-get update
+#RUN apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# confirm installation
+
+RUN docker --version
+RUN docker compose version
 
 # install node and npm
 
