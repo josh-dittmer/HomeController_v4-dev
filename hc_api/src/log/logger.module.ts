@@ -1,6 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
-import { LoggerMiddleware } from "./logger.middleware";
-import { HCLogger } from "./logger.service";
+import { HCLogger } from "./logger.service.js";
 
 @Module({
     providers: [
@@ -12,6 +11,6 @@ import { HCLogger } from "./logger.service";
 })
 export class LoggingModule implements NestModule {
     configure(consumer: MiddlewareConsumer): void {
-        consumer.apply(LoggerMiddleware).forRoutes('*');
+        //consumer.apply(LoggerMiddleware).forRoutes('*');
     }
 }

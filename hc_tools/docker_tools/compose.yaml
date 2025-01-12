@@ -7,4 +7,11 @@ services:
             - "42070:42070"
         volumes:
             - "../..:/app"
+            - "/var/run/docker.sock:/var/run/docker.sock"
         container_name: "homecontroller_dev"
+        networks:
+            - hc_network
+
+networks:
+    hc_network:
+        external: true

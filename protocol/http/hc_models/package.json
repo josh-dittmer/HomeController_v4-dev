@@ -1,0 +1,26 @@
+{
+    "name": "hc_models",
+    "version": "1.0.0",
+    "description": "Shared models for HomeController",
+    "scripts": {
+        "build": "tsc"
+    },
+    "author": "Josh Dittmer",
+    "license": "ISC",
+    "exports": {
+        "./models": {
+            "types": "./dist/models.d.ts",
+            "default": "./dist/models.js"
+        },
+        "./values": {
+            "types": "./dist/values.d.ts",
+            "default": "./dist/values.js"
+        }
+    },
+    "devDependencies": {
+        "typescript": "^5.7.2"
+    },
+    "dependencies": {
+        "io-ts": "^2.2.22"
+    }
+}

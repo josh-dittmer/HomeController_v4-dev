@@ -1,21 +1,24 @@
 {
-  "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "ES2021",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true,
-    "skipLibCheck": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "compilerOptions": {
+        "outDir": "dist",
+        "target": "ESNext",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        /* Advanced Options */
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        /* Output Options */
+        "removeComments": true,
+        "sourceMap": true,
+        "types": [
+            "./src/global.d.ts"
+        ],
+        "strict": true,
+        "skipLibCheck": true,
+    },
+    "include": [
+        "**/*.ts",
+    ]
 }

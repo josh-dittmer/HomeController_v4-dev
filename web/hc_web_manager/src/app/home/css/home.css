@@ -1,0 +1,27 @@
+@keyframes fade-in-animation {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in-animation 1s;
+    animation-fill-mode: forwards;
+}
+
+.vertical-layout {
+    display: grid;
+    grid-template-rows: 60px 1fr 20px;
+
+    width: 100vw;
+    height: 100vh;
+}
+
+.horizontal-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+}

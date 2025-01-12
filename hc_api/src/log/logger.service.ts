@@ -1,4 +1,5 @@
 import { Injectable, LoggerService } from "@nestjs/common";
+import { LOG_LEVEL } from "../common/values.js";
 
 const MainPrefix = '[HC]';
 
@@ -55,7 +56,10 @@ export class HCLogger implements LoggerService {
     }
 
     print(logLevel: LogLevelT, message: any, context?: string) {
-        console.log(`\x1b[${logLevel.color}m${MainPrefix} ${this.getTimestamp()} ${logLevel.prefix}\t[${context}]: ${message}\x1b[0m`);
+        const spaces1 = ' '.repeat(10 - logLevel.prefix.length);
+        const spaces2 = context ? ' '.repeat(16 - context.length) : '';
+
+        console.log(`\x1b[${logLevel.color}m${MainPrefix} ${this.getTimestamp()} ${logLevel.prefix}${spaces1}[${context}]${spaces2}${message}\x1b[0m`);
     }
 
     getTimestamp() {
@@ -78,7 +82,7 @@ export class HCLogger implements LoggerService {
     static register() {
         let level = 0;
 
-        switch (process.env.LOG_LEVEL) {
+        switch (LOG_LEVEL) {
             case 'NORMAL':
                 level = 1;
                 break;

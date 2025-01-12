@@ -1,13 +1,12 @@
-// string length limits
-export const MaxUserNameLength = 64;
+import 'dotenv/config';
 
-export const MaxDeviceNameLength = 64;
-export const MaxDeviceDescriptionLength = 255;
+export const DATABASE_URL = process.env.DATABASE_URL!;
 
-export const DeviceSecretLength = 255;
+export const API_PREFIX = '/api/v1';
+export const API_PORT = process.env.API_PORT!;
 
-// device type names
-export const DeviceNames = {
-    rgbLights: 'rgb_lights',
-    testDevice: 'test_device'
-}
+export const CORS_ALLOWED_ORIGIN = process.env.CORS_ALLOWED_ORIGIN!;
+
+export const LOG_LEVEL = process.env.LOG_LEVEL!;
+
+export const TICKET_LIFETIME = Number.parseInt(process.env.TICKET_LIFETIME!);

@@ -1,0 +1,10 @@
+namespace HomeController;
+
+table CommandHeader {
+    user_id:string;
+    device_id:string;
+}
+
+table StatusHeader {
+    device_id:string;
+}

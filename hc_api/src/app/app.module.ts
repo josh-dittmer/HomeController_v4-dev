@@ -1,23 +1,30 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { LoggingModule } from '../log/logger.module';
-import { AppController } from './app.controller';
-import { DeviceController } from './controllers/device_controller';
-import { AuthMiddleware } from './middleware/auth.middleware';
+import { HCModule } from '../hc/hc.module.js';
+import { LoggerMiddleware } from '../log/logger.middleware.js';
+import { LoggingModule } from '../log/logger.module.js';
+import { AppController } from './app.controller.js';
+import { DeviceController } from './controllers/device.controller.js';
+import { TicketController } from './controllers/ticket.controller.js';
+import { GatewayModule } from './gateway/gateway.module.js';
+import { AuthMiddleware } from './middleware/auth.middleware.js';
 
 @Module({
-    imports: [LoggingModule],
+    imports: [
+        LoggingModule,
+        GatewayModule,
+        HCModule
+    ],
     controllers: [
         AppController,
-        DeviceController
-    ],
-    providers: [
-        AuthMiddleware
-    ],
+        DeviceController,
+        TicketController
+    ]
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
+        consumer.apply(LoggerMiddleware).forRoutes('*');
         consumer.apply(AuthMiddleware).forRoutes(
-            DeviceController
+            DeviceController, TicketController
         );
     }
 }
