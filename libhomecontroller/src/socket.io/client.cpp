@@ -37,7 +37,7 @@ void Client::send(const std::string& event_name, ::sio::message::ptr msg) {
     std::unique_lock<std::mutex> lock(m_mutex);
 
     if (!is_opened()) {
-        m_logger.verbose("Client::send(): Cannot send, client is not opened!");
+        m_logger.warn("Client::send(): Cannot send, client is not opened!");
         return;
     }
 
@@ -67,6 +67,7 @@ void Client::await_finish_and_cleanup() {
                           "can be safely ignored.");
         }
 
+        // calls ::sio::client::sync_close() in destructor
         m_client.reset();
 
         return;
@@ -83,6 +84,7 @@ void Client::await_finish_and_cleanup() {
 
     m_client->clear_con_listeners();
 
+    // calls ::sio::client::sync_close() in destructor
     m_client.reset();
 }
 

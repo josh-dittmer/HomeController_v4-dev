@@ -7,6 +7,7 @@
 #include <thread>
 
 bool RGBLights::init() {
+    // initialization sequence
     if (!m_config.load("conf/conf.json")) {
         return false;
     }
@@ -32,6 +33,7 @@ bool RGBLights::init() {
     start(gateway, m_config.get_device_id(), m_config.get_secret(), state,
           m_config.get_reconn_delay(), m_config.get_reconn_attempts());
 
+    // shutdown sequence
     get_logger().verbose("Shutting down...");
 
     return true;
