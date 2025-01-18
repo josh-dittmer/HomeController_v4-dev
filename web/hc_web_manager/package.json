@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.62.15",
+    "flatbuffers": "^24.12.23",
     "io-ts": "^2.2.22",
     "lucide-react": "^0.469.0",
     "motion": "^11.16.0",

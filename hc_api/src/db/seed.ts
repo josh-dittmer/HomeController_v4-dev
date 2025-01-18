@@ -1,4 +1,4 @@
-import { hashSecret } from "../util/secret.js";
+import { generateDeviceSecret, hashSecret } from "../util/secret.js";
 import { db } from "./db.js";
 import { devicesTable, usersTable } from "./schema.js";
 
@@ -20,10 +20,15 @@ async function seedTest() {
             }
         ];
 
+        const device1Id = '21a6058f-a97e-4a2e-8deb-aa1c4ff5d235';
+
+        const device1Secret = generateDeviceSecret();
+        console.log(`DEVICE 1 SECRET: ${device1Secret}`);
+
         const devices: Array<typeof devicesTable.$inferInsert> = [
             {
-                deviceId: crypto.randomUUID(),
-                secretHash: await hashSecret('dea18d33-3b77-4441-9c29-06fe2f5b9461'),
+                deviceId: device1Id,
+                secretHash: await hashSecret(device1Secret),
                 userId: user1Id,
                 name: 'Test Device',
                 description: 'This is a test device',

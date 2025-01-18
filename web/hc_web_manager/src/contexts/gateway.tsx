@@ -1,18 +1,22 @@
 import { getTicket } from "@/lib/api/actions";
 import { Endpoints } from "@/lib/api/endpoints";
 import { useQueryClient } from "@tanstack/react-query";
-import { createContext, ReactNode, useEffect, useRef } from "react";
+import { ClientToServerEvents, ServerToClientEvents, UserCheckStateReplyData, UserStateChangedData } from "hc_models/types";
+import { createContext, ReactNode, useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
-type SendFunc = () => void;
-type CallbackFunc = () => void;
+type RequestStateFunc = (deviceId: string, cb: (data: object | null) => void) => void;
+type SendCommandFunc = (deviceId: string, data: object) => void;
+type CallbackFunc = (data: object) => void;
 type SubscribeFunc = (channel: string, callback: CallbackFunc) => void;
 type UnsubscribeFunc = (channel: string) => void;
 
 type GatewayContextType = {
-    send: SendFunc,
+    requestState: RequestStateFunc,
+    sendCommand: SendCommandFunc,
     subscribe: SubscribeFunc,
-    unsubscribe: UnsubscribeFunc
+    unsubscribe: UnsubscribeFunc,
+    connected: boolean
 };
 
 export const GatewayContext = createContext<GatewayContextType | null>(null);
@@ -20,11 +24,22 @@ export const GatewayContext = createContext<GatewayContextType | null>(null);
 export function GatewayProvider({ children }: { children: ReactNode }) {
     const client = useQueryClient();
 
-    const socketInst = useRef<Socket | null>(null);
+    const socketInst = useRef<Socket<ServerToClientEvents, ClientToServerEvents> | null>(null);
     const channels = useRef(new Map<string, CallbackFunc>());
 
-    const send: SendFunc = () => {
-        console.log('test send');
+    const [connected, setConnected] = useState<boolean>(false);
+
+    const requestState: RequestStateFunc = async (deviceId: string, cb: (data: object | null) => void) => {
+        socketInst?.current?.emit('userCheckStateRequest', { deviceId: deviceId, }, (msg: UserCheckStateReplyData) => {
+            cb(msg.data);
+        });
+    };
+
+    const sendCommand: SendCommandFunc = (deviceId: string, data: object) => {
+        socketInst?.current?.emit('userCommand', {
+            deviceId: deviceId,
+            data: data
+        });
     };
 
     const subscribe: SubscribeFunc = (channel: string, callback: CallbackFunc) => {
@@ -52,13 +67,33 @@ export function GatewayProvider({ children }: { children: ReactNode }) {
             socketInst.current?.disconnect();
         });
 
+        socketInst.current.on('connect', () => {
+            setConnected(true);
+        });
+
+        socketInst.current.on('userStateChanged', (msg: UserStateChangedData) => {
+            const cb = channels.current.get(msg.deviceId);
+
+            if (cb) {
+                cb(msg.data);
+            }
+        });
+
         return () => {
             socketInst.current?.disconnect();
         }
     }, [client]);
 
     return (
-        <GatewayContext.Provider value={{ send: send, subscribe: subscribe, unsubscribe: unsubscribe }}>
+        <GatewayContext.Provider
+            value={{
+                requestState: requestState,
+                sendCommand: sendCommand,
+                subscribe: subscribe,
+                unsubscribe: unsubscribe,
+                connected: connected
+            }}
+        >
             {children}
         </GatewayContext.Provider>
     )

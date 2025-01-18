@@ -56,8 +56,12 @@ export class HCLogger implements LoggerService {
     }
 
     print(logLevel: LogLevelT, message: any, context?: string) {
+        if (context && context.length > 11) {
+            context = context.substring(0, 11) + '...';
+        }
+
         const spaces1 = ' '.repeat(10 - logLevel.prefix.length);
-        const spaces2 = context ? ' '.repeat(16 - context.length) : '';
+        const spaces2 = context ? ' '.repeat(15 - context.length) : '';
 
         console.log(`\x1b[${logLevel.color}m${MainPrefix} ${this.getTimestamp()} ${logLevel.prefix}${spaces1}[${context}]${spaces2}${message}\x1b[0m`);
     }

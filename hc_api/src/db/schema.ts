@@ -16,7 +16,7 @@ export const devicesTable = pgTable('devices', {
     name: varchar({ length: MaxDeviceNameLength }).notNull(),
     description: varchar({ length: MaxDeviceDescriptionLength }).notNull(),
     type: deviceTypeEnum().notNull()
-})
+});
 
 export const ticketsTable = pgTable('tickets', {
     ticketId: uuid().unique().notNull().primaryKey().$default(() => crypto.randomUUID()),

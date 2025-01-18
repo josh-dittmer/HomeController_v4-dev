@@ -8,7 +8,7 @@ import { HCLogger } from './log/logger.service.js';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
-        bufferLogs: true,
+        bufferLogs: true
     })
 
     app.useLogger(app.get(HCLogger));

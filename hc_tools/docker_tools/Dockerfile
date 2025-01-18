@@ -2,7 +2,7 @@ FROM ubuntu:latest
 LABEL Description="HomeController development environment"
 
 RUN apt -y update && apt install -y
-RUN apt install -y g++ make cmake git unzip python-setuptools python3-setuptools wget curl ca-certificates
+RUN apt install -y g++ make cmake git unzip python-setuptools python3-setuptools wget curl ca-certificates gdb
 
 # install docker and docker compose
 
@@ -52,11 +52,16 @@ RUN git clone https://github.com/zaphoyd/websocketpp.git \
     && cmake .. \
     && make install
 
-RUN git clone https://github.com/Tencent/rapidjson.git \
-    && cd rapidjson \
-    && mkdir build \
-    && cd build \
-    && cmake .. \
+RUN wget https://gigenet.dl.sourceforge.net/project/asio/asio/1.30.2%20%28Stable%29/asio-1.30.2.tar.gz \
+    && tar -xvzf asio-1.30.2.tar.gz \
+    && rm asio-1.30.2.tar.gz \
+    && cd asio-1.30.2 \
+    && ./configure \
+    && make install
+
+RUN git clone git clone https://github.com/socketio/socket.io-client-cpp.git \
+    && cd socket.io-client-cpp \
+    && cmake ./ \
     && make install
 
 RUN wget https://github.com/joan2937/pigpio/archive/master.zip \
@@ -66,17 +71,25 @@ RUN wget https://github.com/joan2937/pigpio/archive/master.zip \
     && make \
     && make install
 
+RUN git clone https://github.com/Tencent/rapidjson.git \
+    && cd rapidjson \
+    && mkdir build \
+    && cd build \
+    && cmake .. \
+    && make install
+
 RUN echo "/usr/local/lib" > "/etc/ld.so.conf.d/999local.conf"
 RUN ldconfig
 
 RUN rm -r flatbuffers
 RUN rm -r websocketpp
-RUN rm -r rapidjson
+RUN rm -r socket.io-client-cpp
+RUN rm -r asio-1.30.2
 RUN rm -r pigpio-master
+RUN rm -r rapidjson
 
 EXPOSE 3000
 EXPOSE 42069
-EXPOSE 42070
 
 # keep container from immediately exiting
 

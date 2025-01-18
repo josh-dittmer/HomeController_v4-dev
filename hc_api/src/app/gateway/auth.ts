@@ -32,18 +32,22 @@ export const authMiddleware = (hc: HCService, namespace: () => HCGatewayNamespac
                 logger.verbose(`Authenticated [user/${socket.data.userId}] via ticket`);
             },
             'device': async (key: string) => {
-                const deviceId = '1234';
+                if (!socket.handshake.auth.deviceId) {
+                    throw new Error('missing device id');
+                }
+
+                const deviceId = socket.handshake.auth.deviceId;
+                const ownerId = await hc.deviceRepository.checkSecret(deviceId, key);
 
                 const sockets = await namespace().in(`device_${deviceId}`).fetchSockets();
                 if (sockets.length !== 0) {
-                    logger.debug('Gateway connection failed: device already connected');
                     throw new Error('device already connected');
                 }
 
                 socket.data.deviceId = deviceId;
-                socket.data.ownerId = '1234';
+                socket.data.ownerId = ownerId;
 
-                logger.log(`Authenticated [device/${socket.data.deviceId}] via device secret`);
+                logger.verbose(`Authenticated [device/${socket.data.deviceId}] via device secret`);
             }
         };
 
