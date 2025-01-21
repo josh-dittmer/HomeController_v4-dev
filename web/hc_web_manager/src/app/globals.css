@@ -41,8 +41,7 @@ body {
     --bg-medium-dark: rgb(237, 242, 246);
     --bg-medium: rgb(241, 245, 249);
     --bg-light: rgb(255, 255, 255);
-    --bg-accent: rgb(170, 129, 225);
-    --bg-accent-dark: rgb(140, 99, 195);
+    --bg-accent: #4ade80;
 
     --fg-dark: rgb(0, 0, 0);
     --fg-medium: rgb(107, 114, 128);
@@ -61,8 +60,7 @@ body {
     --bg-medium-dark: rgb(50, 50, 50);
     --bg-medium: rgb(58, 58, 58);
     --bg-light: rgb(66, 65, 65);
-    --bg-accent: rgb(170, 129, 225);
-    --bg-accent-dark: rgb(140, 99, 195);
+    --bg-accent: #16a34a;
 
     --fg-dark: rgb(255, 255, 255);
     --fg-medium: rgb(178, 178, 178);
