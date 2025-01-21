@@ -18,8 +18,7 @@ class Client {
     Client() : m_logger("SIOClient"), m_running(false), m_connecting(false) {}
     ~Client() {}
 
-    typedef std::function<void(::sio::socket::ptr, ::sio::message::ptr)>
-        EventCallback;
+    typedef std::function<void(::sio::message::ptr)> EventCallback;
 
     void register_event(const std::string& name, EventCallback callback);
 
@@ -33,7 +32,8 @@ class Client {
 
     void await_finish_and_cleanup();
 
-    bool is_opened() { return m_client && m_client->opened(); }
+    // bool is_opened() const;
+    bool is_running();
 
   private:
     void init_client(int reconn_delay, int reconn_attempts);

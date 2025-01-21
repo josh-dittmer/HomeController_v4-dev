@@ -12,13 +12,20 @@ OBJECTDIR = $(BINARYDIR)/obj
 TARGET = $(BINARYDIR)/rgb_lights
 
 LIBS += -lpthread
+LIBS += -latomic
 LIBS += -lsioclient
 LIBS += -lhomecontroller
 LIBS += -lpigpio
 
 # programs
+_OBJECTS += programs/default_program.o
+_HEADERS += programs/default_program.h
+
 _OBJECTS += programs/program.o
 _HEADERS += programs/program.h
+
+_OBJECTS += programs/rainbow_fade_program.o
+_HEADERS += programs/rainbow_fade_program.h
 
 # root
 _OBJECTS += config.o

@@ -172,6 +172,7 @@ export class HCGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGa
 
         this.logger.verbose(`[device/${deviceId}] -> [deviceStateChanged]`);
 
+        console.log(msg.data);
         this.namespace().in(`user_${ownerId}`).emit('userStateChanged', {
             deviceId: deviceId,
             data: msg.data

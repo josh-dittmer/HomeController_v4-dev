@@ -4,29 +4,59 @@
 #include <homecontroller/api/device_data/rgb_lights.h>
 
 #include "config.h"
+#include "programs/program.h"
+
+#include <condition_variable>
+#include <memory>
+#include <mutex>
 
 class RGBLights : public hc::api::Device<hc::api::rgb_lights::State> {
   public:
-    RGBLights() : Device("RGBLights"), m_started(false) {}
+    RGBLights() : Device("RGBLights"), m_loop_needs_reset(false) {}
     ~RGBLights() {}
 
     bool init();
 
     void shutdown();
 
+    void set_color(uint8_t r, uint8_t g, uint8_t b,
+                   bool update_on_server = true);
+
   private:
+    void loop();
+
     void on_command_received(
-        ::sio::socket::ptr socket,
         std::map<std::string, ::sio::message::ptr>& data) override;
 
     ::sio::message::ptr serialize_state() const override;
 
-    void loop() override;
-
     void handle_power_on(hc::api::rgb_lights::State& state);
     void handle_power_off(hc::api::rgb_lights::State& state);
+    void handle_set_color(hc::api::rgb_lights::State& state,
+                          bool& needs_update_ref,
+                          std::map<std::string, ::sio::message::ptr>& data);
+    void handle_start_program(hc::api::rgb_lights::State& state,
+                              std::map<std::string, ::sio::message::ptr>& data);
+    void
+    handle_interrupt_program(std::map<std::string, ::sio::message::ptr>& data);
+    void handle_stop_program(hc::api::rgb_lights::State& state);
+
+    void reset_program(hc::api::rgb_lights::State::Program program);
 
     Config m_config;
 
-    bool m_started;
+    std::unique_ptr<Program> m_program_ptr;
+
+    std::mutex m_mutex_loop;
+    std::mutex m_mutex_command;
+
+    std::condition_variable m_cv_loop;
+    bool m_loop_needs_reset;
+
+    // storage for powering on/off
+    hc::api::rgb_lights::State::Program m_last_program;
+
+    uint8_t m_last_r;
+    uint8_t m_last_g;
+    uint8_t m_last_b;
 };

@@ -36,7 +36,7 @@ void Client::start(const std::string& url, const std::string& nsp,
 void Client::send(const std::string& event_name, ::sio::message::ptr msg) {
     std::unique_lock<std::mutex> lock(m_mutex);
 
-    if (!is_opened()) {
+    if (!m_client || !m_client->opened()) {
         m_logger.warn("Client::send(): Cannot send, client is not opened!");
         return;
     }
@@ -55,37 +55,42 @@ void Client::shutdown() {
 void Client::await_finish_and_cleanup() {
     std::unique_lock<std::mutex> lock(m_mutex);
 
-    if (!m_running) {
-        m_logger.verbose("Client::await_finish_and_cleanup(): Client not "
-                         "running, cleaning up...");
+    if (m_running) {
+        m_logger.verbose(
+            "Client::await_finish_and_cleanup(): Client is running, "
+            "waiting for signal...");
 
-        m_client->clear_con_listeners();
+        m_cv.wait(lock);
 
-        if (m_connecting) {
-            m_logger.warn("Client is in the connecting state. The socket.io "
-                          "client library will likely show an error, but this "
-                          "can be safely ignored.");
-        }
+        m_logger.verbose("Client::await_finish_and_cleanup(): Received signal, "
+                         "cleaning up...");
 
-        // calls ::sio::client::sync_close() in destructor
-        m_client.reset();
-
-        return;
+        m_current_socket->off_all();
+        m_current_socket->off_error();
     }
-
-    m_logger.verbose("Client::await_finish_and_cleanup(): Client is running, "
-                     "waiting for signal...");
-    m_cv.wait(lock);
-    m_logger.verbose(
-        "Client::await_finish_and_cleanup(): Received signal, cleaning up...");
-
-    m_current_socket->off_all();
-    m_current_socket->off_error();
 
     m_client->clear_con_listeners();
 
+    if (m_connecting || (!m_client->opened() && m_running)) {
+        m_logger.warn("Client is in the connecting state. The socket.io "
+                      "client library will likely show an error, but this "
+                      "can be safely ignored.");
+    }
+
     // calls ::sio::client::sync_close() in destructor
     m_client.reset();
+
+    m_running = false;
+}
+
+/*bool Client::is_opened() {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    return m_client && m_client->opened();
+}*/
+
+bool Client::is_running() {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    return m_running;
 }
 
 void Client::init_client(int reconn_delay, int reconn_attempts) {
@@ -119,7 +124,7 @@ void Client::on_open() {
             m_logger.verbose("Received event: [" + event.get_name() + "]");
 
             try {
-                x.second(m_current_socket, event.get_message());
+                x.second(event.get_message());
             } catch (std::exception& e) {
                 m_logger.error("Event handler failed: " +
                                std::string(e.what()));
@@ -131,9 +136,12 @@ void Client::on_open() {
         m_current_socket->on(x.first, cb);
     }
 
-    m_running = true;
+    if (!m_running) {
+        m_cv.notify_all();
+        m_running = true;
+    }
+
     m_connecting = false;
-    m_cv.notify_all();
 
     m_logger.log("Connected opened successfully");
 }
