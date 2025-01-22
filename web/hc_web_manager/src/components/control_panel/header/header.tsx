@@ -7,8 +7,8 @@ import Link from "next/link";
 
 export default function Header({ device }: { device: DeviceT }) {
     return (
-        <div className="w-full">
-            <div className="flex gap-2 items-center">
+        <div className="w-full h-10 flex items-center">
+            <div className="w-full flex gap-2 items-center">
                 <Link href="/home">
                     <motion.div
                         whileHover={{ scale: 1.03 }}
