@@ -20,7 +20,7 @@ export default function DeviceList({ onlineDevices, offlineDevices }: { onlineDe
                     </div>
                     <div className="flex flex-wrap justify-center sm:justify-start">
                         {data.onlineDevices.map((device: DeviceT) =>
-                            <div key={device.deviceId} className="pt-4 pr-4">
+                            <div key={device.deviceId} className="pt-4 sm:pr-4">
                                 {device.type === 'test_device' ? (
                                     <RGBLightsCard key={device.deviceId} device={device} />
                                 ) : (
