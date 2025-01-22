@@ -1,7 +1,7 @@
 'use server';
 
 import { isLeft } from 'fp-ts/lib/Either';
-import { GetAllDevicesResponse, GetAllDevicesResponseT, TicketResponse, TicketResponseT } from "hc_models/models";
+import { GetAllDevicesResponse, GetAllDevicesResponseT, GetOneDeviceResponse, GetOneDeviceResponseT, TicketResponse, TicketResponseT } from "hc_models/models";
 import * as t from 'io-ts';
 import { PathReporter } from 'io-ts/PathReporter';
 import { redirect } from "next/navigation";
@@ -47,6 +47,10 @@ export async function requestAndDecode<C extends t.Mixed>(path: string, data: Re
 export async function getAllDevices(): Promise<GetAllDevicesResponseT> {
     //await new Promise((resolve) => setTimeout(resolve, 5000));
     return await requestAndDecode('/device/all', getReq(), GetAllDevicesResponse);
+}
+
+export async function getOneDevice(deviceId: string): Promise<GetOneDeviceResponseT> {
+    return await requestAndDecode(`/device/${deviceId}`, getReq(), GetOneDeviceResponse);
 }
 
 export async function getTicket(): Promise<TicketResponseT> {

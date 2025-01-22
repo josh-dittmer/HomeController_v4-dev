@@ -65,6 +65,16 @@ export class HCGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGa
         return devices;
     }
 
+    async isDeviceOnline(userId: string, deviceId: string): Promise<boolean> {
+        const sockets = await this.namespace().in(`owner_${userId}`).fetchSockets();
+
+        if (sockets.find((socket) => socket.data.deviceId === deviceId)) {
+            return true;
+        }
+
+        return false;
+    };
+
     @SubscribeMessage('test')
     async handleTest() {
         return 'test';
@@ -170,9 +180,8 @@ export class HCGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGa
             return;
         }
 
-        this.logger.verbose(`[device/${deviceId}] -> [deviceStateChanged]`);
+        //this.logger.verbose(`[device/${deviceId}] -> [deviceStateChanged]`);
 
-        console.log(msg.data);
         this.namespace().in(`user_${ownerId}`).emit('userStateChanged', {
             deviceId: deviceId,
             data: msg.data
@@ -188,8 +197,12 @@ export class HCGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGa
     }
 
     private async handleDeviceConnect(socket: HCGatewaySocket) {
-        socket.join(`device_${socket.data.deviceId}`);
-        socket.join(`owner_${socket.data.ownerId}`);
+        if (socket.data.deviceId && socket.data.ownerId) {
+            socket.join(`device_${socket.data.deviceId}`);
+            socket.join(`owner_${socket.data.ownerId}`);
+
+            this.namespace().in(`user_${socket.data.ownerId}`).emit('userDeviceConnected', { deviceId: socket.data.deviceId });
+        }
 
         this.logger.verbose(`[device/${socket.data.deviceId}] owned by [user/${socket.data.ownerId}]`);
         this.logger.log(`[device/${socket.data.deviceId}] has connected`);
@@ -201,7 +214,7 @@ export class HCGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGa
 
     private async handleDeviceDisconnect(socket: HCGatewaySocket) {
         if (socket.data.deviceId && socket.data.ownerId) {
-            this.namespace().in(`owner_${socket.data.ownerId}`).emit('userDeviceDisconnected', { deviceId: socket.data.deviceId });
+            this.namespace().in(`user_${socket.data.ownerId}`).emit('userDeviceDisconnected', { deviceId: socket.data.deviceId });
         }
 
         this.logger.log(`[device/${socket.data.deviceId}] has disconnected`);

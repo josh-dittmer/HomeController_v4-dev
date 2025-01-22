@@ -1,6 +1,7 @@
 import { Controller, Delete, Get, Logger, Param, Post, Req, Res } from "@nestjs/common";
 import { Request, Response } from 'express';
-import { GetAllDevicesResponseT } from "hc_models/models";
+import { GetAllDevicesResponseT, GetOneDeviceResponseT } from "hc_models/models";
+import { notFound } from "../../common/responses.js";
 import { HCService } from "../../hc/hc.service.js";
 import { HCGateway } from "../gateway/gateway.js";
 
@@ -34,7 +35,18 @@ export class DeviceController {
 
     @Get(':id')
     async getOne(@Req() req: Request, @Res() res: Response, @Param('id') id: string) {
-        res.json({ message: id });
+        const device = await this.hc.deviceRepository.getOne(res.locals.userId, id);
+
+        if (!device) {
+            return res.json(notFound(res, id));
+        }
+
+        const result: GetOneDeviceResponseT = {
+            device: device,
+            online: await this.gateway.isDeviceOnline(res.locals.userId, device.deviceId)
+        };
+
+        res.json(result);
     }
 
     @Post('create')

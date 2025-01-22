@@ -21,6 +21,13 @@ export const GetAllDevicesResponse = t.type({
 
 export type GetAllDevicesResponseT = t.TypeOf<typeof GetAllDevicesResponse>;
 
+export const GetOneDeviceResponse = t.type({
+    device: Device,
+    online: t.boolean
+})
+
+export type GetOneDeviceResponseT = t.TypeOf<typeof GetOneDeviceResponse>;
+
 export const TicketResponse = t.type({
     ticket: t.string
 })

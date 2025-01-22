@@ -5,3 +5,9 @@ export function unauthorized(res: Response) {
         message: 'client is unauthorized'
     });
 }
+
+export function notFound(res: Response, what: string) {
+    res.status(404).send({
+        message: `${what} not found`,
+    });
+}

@@ -1,7 +1,8 @@
 import { getTicket } from "@/lib/api/actions";
 import { Endpoints } from "@/lib/api/endpoints";
+import { allDevicesKey } from "@/lib/queries/all_devices";
 import { useQueryClient } from "@tanstack/react-query";
-import { ClientToServerEvents, ServerToClientEvents, UserCheckStateReplyData, UserStateChangedData } from "hc_models/types";
+import { ClientToServerEvents, ServerToClientEvents, UserCheckStateReplyData, UserDeviceConnectedData, UserDeviceDisconnectedData, UserStateChangedData } from "hc_models/types";
 import { createContext, ReactNode, useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
@@ -77,6 +78,14 @@ export function GatewayProvider({ children }: { children: ReactNode }) {
             if (cb) {
                 cb(msg.data);
             }
+        });
+
+        socketInst.current.on('userDeviceConnected', (msg: UserDeviceConnectedData) => {
+            client.invalidateQueries({ queryKey: [allDevicesKey()] });
+        });
+
+        socketInst.current.on('userDeviceDisconnected', (msg: UserDeviceDisconnectedData) => {
+            client.invalidateQueries({ queryKey: [allDevicesKey()] });
         });
 
         return () => {

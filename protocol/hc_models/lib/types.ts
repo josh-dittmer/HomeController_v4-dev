@@ -10,6 +10,10 @@ export type UserStateChangedData = {
     data: object
 };
 
+export type UserDeviceConnectedData = {
+    deviceId: string
+};
+
 export type UserDeviceDisconnectedData = {
     deviceId: string
 };
@@ -46,6 +50,7 @@ export type DeviceStateChangedData = {
 export interface ServerToClientEvents {
     // sent to users
     userStateChanged: (msg: UserStateChangedData) => void;
+    userDeviceConnected: (msg: UserDeviceConnectedData) => void;
     userDeviceDisconnected: (msg: UserDeviceDisconnectedData) => void;
 
     // sent to devices

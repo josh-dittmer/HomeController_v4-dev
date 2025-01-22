@@ -31,7 +31,7 @@ export async function createLoginUrl(clearSession: boolean): Promise<LoginUrlInf
 }
 
 async function tokenRequest(data: object) {
-    const host = (process.env.ENVIRONMENT === 'dev') ? 'http://host.docker.internal:8080/api/v1' : Endpoints.authApi;
+    const host = (process.env.NODE_ENV === 'development') ? 'http://host.docker.internal:8080/api/v1' : Endpoints.authApi;
 
     const response = await fetch(`${host}/oauth2/token`, {
         method: 'post',
@@ -75,7 +75,7 @@ function getExpiration(expiresIn: number) {
 }
 
 const cookieSettings: Partial<ResponseCookie> = {
-    secure: true,
+    secure: process.env.NODE_ENV !== 'development',
     httpOnly: true,
     sameSite: 'strict',
     path: '/'

@@ -8,5 +8,7 @@ import { GetAllDevicesResponseT } from "hc_models/models";
 export default async function HomePage() {
     const devices: GetAllDevicesResponseT = await getAllDevices();
 
-    return <DeviceList onlineDevices={devices.onlineDevices} offlineDevices={devices.offlineDevices} />
+    return (
+        <DeviceList onlineDevices={devices.onlineDevices} offlineDevices={devices.offlineDevices} />
+    )
 }

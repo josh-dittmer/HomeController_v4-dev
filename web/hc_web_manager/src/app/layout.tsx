@@ -1,5 +1,5 @@
 import Client from "@/components/client/client";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -15,7 +15,12 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
     title: "HomeController",
-    description: "Control your IoT devices online!",
+    description: "Control your IoT devices online!"
+};
+
+export const viewport: Viewport = {
+    width: 'device-width',
+    initialScale: 1
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

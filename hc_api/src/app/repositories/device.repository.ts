@@ -1,5 +1,5 @@
-import { eq } from "drizzle-orm";
-import { DeviceArrayT } from "hc_models/models";
+import { and, eq } from "drizzle-orm";
+import { DeviceArrayT, DeviceT } from "hc_models/models";
 import { db } from "../../db/db.js";
 import { devicesTable } from "../../db/schema.js";
 import { verifySecret } from "../../util/secret.js";
@@ -16,6 +16,23 @@ export class DeviceRepository {
             .where(eq(devicesTable.userId, userId));
 
         return devices;
+    }
+
+    async getOne(userId: string, deviceId: string): Promise<DeviceT | null> {
+        const devices: DeviceArrayT = await db.select({
+            deviceId: devicesTable.deviceId,
+            type: devicesTable.type,
+            name: devicesTable.name,
+            description: devicesTable.description,
+        })
+            .from(devicesTable)
+            .where(and(eq(devicesTable.userId, userId), eq(devicesTable.deviceId, deviceId)));
+
+        if (devices.length === 0) {
+            return null;
+        }
+
+        return devices[0];
     }
 
     async checkSecret(deviceId: string, secret: string): Promise<string> {
