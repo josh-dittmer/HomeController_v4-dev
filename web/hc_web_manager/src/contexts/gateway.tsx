@@ -1,6 +1,7 @@
 import { getTicket } from "@/lib/api/actions";
 import { Endpoints } from "@/lib/api/endpoints";
 import { allDevicesKey } from "@/lib/queries/all_devices";
+import { oneDeviceKey } from "@/lib/queries/one_device";
 import { useQueryClient } from "@tanstack/react-query";
 import { ClientToServerEvents, ServerToClientEvents, UserCheckStateReplyData, UserDeviceConnectedData, UserDeviceDisconnectedData, UserStateChangedData } from "hc_models/types";
 import { createContext, ReactNode, useEffect, useRef, useState } from "react";
@@ -12,7 +13,7 @@ type CallbackFunc = (data: object) => void;
 type SubscribeFunc = (channel: string, callback: CallbackFunc) => void;
 type UnsubscribeFunc = (channel: string) => void;
 
-type GatewayContextType = {
+export type GatewayContextType = {
     requestState: RequestStateFunc,
     sendCommand: SendCommandFunc,
     subscribe: SubscribeFunc,
@@ -81,11 +82,13 @@ export function GatewayProvider({ children }: { children: ReactNode }) {
         });
 
         socketInst.current.on('userDeviceConnected', (msg: UserDeviceConnectedData) => {
-            client.invalidateQueries({ queryKey: [allDevicesKey()] });
+            client.invalidateQueries({ queryKey: allDevicesKey() });
+            client.invalidateQueries({ queryKey: oneDeviceKey(msg.deviceId) });
         });
 
         socketInst.current.on('userDeviceDisconnected', (msg: UserDeviceDisconnectedData) => {
-            client.invalidateQueries({ queryKey: [allDevicesKey()] });
+            client.invalidateQueries({ queryKey: allDevicesKey() });
+            client.invalidateQueries({ queryKey: oneDeviceKey(msg.deviceId) });
         });
 
         return () => {
