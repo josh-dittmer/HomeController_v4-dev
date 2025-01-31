@@ -9,9 +9,9 @@
 #include <iostream>
 #include <thread>
 
-bool RGBLights::init() {
+bool RGBLights::init(const CommandLineArgs& args) {
     // initialization sequence
-    if (!m_config.load("conf/conf.json")) {
+    if (!m_config.load(args.m_config_path)) {
         return false;
     }
 

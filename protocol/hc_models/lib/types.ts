@@ -56,6 +56,7 @@ export interface ServerToClientEvents {
     // sent to devices
     deviceCheckStateRequest: (msg: DeviceCheckStateRequestData) => void;
     deviceCommand: (msg: DeviceCommandData) => void;
+    deviceDeleted: () => void;
 }
 
 export interface ClientToServerEvents {

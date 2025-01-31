@@ -1,7 +1,9 @@
 export const Endpoints = {
-    authApiUrl: `${process.env.NEXT_PUBLIC_AUTH_API_URL!}`,
+    authApiPublicUrl: `${process.env.NEXT_PUBLIC_AUTH_API_PUBLIC_URL!}`,
+    authApiInternalUrl: `${process.env.NEXT_PUBLIC_AUTH_API_INTERNAL_URL!}`,
     authApiPrefix: `${process.env.NEXT_PUBLIC_AUTH_API_PREFIX!}`,
-    authApi: `${process.env.NEXT_PUBLIC_AUTH_API_URL!}${process.env.NEXT_PUBLIC_AUTH_API_PREFIX!}`,
+    authApiPublic: `${process.env.NEXT_PUBLIC_AUTH_API_PUBLIC_URL!}${process.env.NEXT_PUBLIC_AUTH_API_PREFIX!}`,
+    authApiInternal: `${process.env.NEXT_PUBLIC_AUTH_API_INTERNAL_URL!}${process.env.NEXT_PUBLIC_AUTH_API_PREFIX!}`,
 
     mainApiUrl: `${process.env.NEXT_PUBLIC_MAIN_API_URL!}`,
     mainApiPrefix: `${process.env.NEXT_PUBLIC_MAIN_API_PREFIX!}`,

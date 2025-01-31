@@ -10,7 +10,7 @@ import { createAuth, LoginUrlInfo, TokenResponse, TokenStorageNames } from "./ut
 export async function createLoginUrl(clearSession: boolean): Promise<LoginUrlInfo> {
     const { state, verifier, challenge } = await createAuth();
 
-    const url = new URL(`${Endpoints.authApi}/oauth2/authorize`);
+    const url = new URL(`${Endpoints.authApiPublic}/oauth2/authorize`);
     url.searchParams.set('client_id', ClientId);
     url.searchParams.set('redirect_uri', Endpoints.callbackUrl);
     url.searchParams.set('response_type', 'code');
@@ -31,9 +31,7 @@ export async function createLoginUrl(clearSession: boolean): Promise<LoginUrlInf
 }
 
 async function tokenRequest(data: object) {
-    const host = (process.env.NODE_ENV === 'development') ? 'http://host.docker.internal:8080/api/v1' : Endpoints.authApi;
-
-    const response = await fetch(`${host}/oauth2/token`, {
+    const response = await fetch(`${Endpoints.authApiInternal}/oauth2/token`, {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
@@ -52,7 +50,7 @@ async function tokenRequest(data: object) {
 }
 
 async function revokeRequest(data: object) {
-    const response = await fetch(`${Endpoints.authApi}/oauth2/revoke`, {
+    const response = await fetch(`${Endpoints.authApiInternal}/oauth2/revoke`, {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
@@ -145,7 +143,7 @@ export async function getAccessToken() {
     return accessToken.value;
 }
 
-export async function handleRevokeTokens() {
+export async function revokeTokens() {
     const cookieStore = await cookies();
 
     const refreshToken = cookieStore.get(TokenStorageNames.refreshToken);

@@ -16,7 +16,6 @@ export const TokenResponse = t.type({
 
 export type TokenResponseT = t.TypeOf<typeof TokenResponse>;
 
-
 export const TokenStorageNames = {
     accessToken: 'access_token',
     refreshToken: 'refresh_token',

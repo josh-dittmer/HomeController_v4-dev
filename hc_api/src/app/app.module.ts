@@ -5,6 +5,7 @@ import { LoggingModule } from '../log/logger.module.js';
 import { AppController } from './app.controller.js';
 import { DeviceController } from './controllers/device.controller.js';
 import { TicketController } from './controllers/ticket.controller.js';
+import { UserController } from './controllers/user.controller.js';
 import { GatewayModule } from './gateway/gateway.module.js';
 import { AuthMiddleware } from './middleware/auth.middleware.js';
 
@@ -17,14 +18,15 @@ import { AuthMiddleware } from './middleware/auth.middleware.js';
     controllers: [
         AppController,
         DeviceController,
-        TicketController
+        TicketController,
+        UserController
     ]
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer.apply(LoggerMiddleware).forRoutes('*');
         consumer.apply(AuthMiddleware).forRoutes(
-            DeviceController, TicketController
+            DeviceController, TicketController, UserController
         );
     }
 }

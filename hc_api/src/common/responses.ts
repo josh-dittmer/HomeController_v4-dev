@@ -11,3 +11,9 @@ export function notFound(res: Response, what: string) {
         message: `${what} not found`,
     });
 }
+
+export function badRequest(res: Response) {
+    res.status(400).send({
+        message: 'invalid request body',
+    });
+}

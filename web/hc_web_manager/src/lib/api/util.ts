@@ -10,10 +10,6 @@ export const postReq = <T>(data: T): RequestInit => ({
     body: JSON.stringify(data)
 });
 
-export const deleteReq = <T>(data: T): RequestInit => ({
+export const deleteReq = (): RequestInit => ({
     method: 'delete',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
 });

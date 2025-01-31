@@ -6,7 +6,7 @@ html,
 body {
     margin: 0;
     height: 100%;
-    /*overflow: hidden;*/
+    overflow: hidden;
 }
 
 @keyframes switch-light-animation {
@@ -39,7 +39,7 @@ body {
 
 .light {
     --bg-dark: rgb(226, 232, 240);
-    --bg-medium-dark: rgb(237, 242, 246);
+    --bg-medium-dark: rgb(228, 232, 240);
     --bg-medium: rgb(241, 245, 249);
     --bg-light: rgb(255, 255, 255);
     --bg-accent: #4ade80;

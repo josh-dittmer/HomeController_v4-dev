@@ -147,8 +147,9 @@ void Client::on_open() {
 }
 
 void Client::on_close(const ::sio::client::close_reason& reason) {
-    m_logger.debug("Message placed here to verify proper cleanup, you should "
-                   "not be seeing this.");
+    m_logger.debug(
+        "Message placed here to verify proper cleanup, you should "
+        "not be seeing this unless client was disconnected by the server.");
 }
 
 void Client::on_fail() {

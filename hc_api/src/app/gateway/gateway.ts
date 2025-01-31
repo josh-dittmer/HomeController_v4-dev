@@ -68,12 +68,37 @@ export class HCGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGa
     async isDeviceOnline(userId: string, deviceId: string): Promise<boolean> {
         const sockets = await this.namespace().in(`owner_${userId}`).fetchSockets();
 
-        if (sockets.find((socket) => socket.data.deviceId === deviceId)) {
-            return true;
+        if (sockets.length === 0) {
+            return false;
         }
 
-        return false;
+        const socket = sockets[0];
+
+        if (!socket.rooms.has(`device_${deviceId}`)) {
+            return false;
+        }
+
+        return true;
     };
+
+    async sendDeleteEvent(userId: string, deviceId: string) {
+        const sockets = await this.namespace().in(`owner_${userId}`).fetchSockets();
+
+        if (sockets.length === 0) {
+            this.logger.warn('Tried to send delete event to nonexistent device');
+            return;
+        }
+
+        const socket = sockets[0];
+
+        if (!socket.rooms.has(`device_${deviceId}`)) {
+            this.logger.warn('Tried to send delete event to device not owned by user');
+            return;
+        }
+
+        socket.emit('deviceDeleted');
+        //sockets[0].disconnect(true);
+    }
 
     @SubscribeMessage('test')
     async handleTest() {
@@ -111,7 +136,7 @@ export class HCGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGa
                 if (!timedOut) {
                     clearTimeout(timeout);
 
-                    this.logger.verbose(`[user/${socket.data.userId}] -> [deviceCheckStateRequest]`);
+                    this.logger.verbose(`[deviceCheckStateReply] -> [user/${socket.data.userId}]`);
                     resolve({ data: data });
                 } else {
                     this.logger.debug(`State check reply from [device/${deviceId}] received after timeout`);

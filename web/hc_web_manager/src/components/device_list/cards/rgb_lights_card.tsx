@@ -32,7 +32,7 @@ export function RGBLightsCard({ device }: { device: DeviceT }) {
                     </div>
                     <div className="h-full flex flex-col justify-center gap-2">
                         <div className="flex justify-center">
-                            <Link href={`/home/${device.deviceId}`}>
+                            <Link href={`/home/device/${device.deviceId}`}>
                                 <h1 className={ready ? `text-fg-dark` : `text-fg-light`}>{device.name}</h1>
                             </Link>
                         </div>

@@ -23,7 +23,7 @@ export default function ControlPanel({ res }: { res: GetOneDeviceResponseT }) {
         <div className="p-4 w-full h-full">
             <Header device={data.device} />
             {data.online ? (
-                res.device.type === 'test_device' ? (
+                res.device.type === 'rgb_lights' ? (
                     <RGBLightsControlPanel device={data.device} />
                 ) : (
                     <p>Unknown device type</p>

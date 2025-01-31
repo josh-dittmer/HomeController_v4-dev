@@ -63,6 +63,13 @@ template <typename StateType> void Device<StateType>::register_events() {
     };
 
     m_client.register_event("deviceCommand", cb2);
+
+    sio::Client::EventCallback cb3 = [this](::sio::message::ptr) {
+        m_logger.log("Device has been deleted! Shutting down...");
+        stop();
+    };
+
+    m_client.register_event("deviceDeleted", cb3);
 }
 
 template <typename StateType>

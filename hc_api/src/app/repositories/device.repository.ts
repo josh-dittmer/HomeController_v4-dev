@@ -1,8 +1,8 @@
 import { and, eq } from "drizzle-orm";
-import { DeviceArrayT, DeviceT } from "hc_models/models";
+import { CreateDeviceRequestT, DeviceArrayT, DeviceT } from "hc_models/models";
 import { db } from "../../db/db.js";
 import { devicesTable } from "../../db/schema.js";
-import { verifySecret } from "../../util/secret.js";
+import { generateDeviceSecret, hashSecret, verifySecret } from "../../util/secret.js";
 
 export class DeviceRepository {
     async getAll(userId: string): Promise<DeviceArrayT> {
@@ -33,6 +33,39 @@ export class DeviceRepository {
         }
 
         return devices[0];
+    }
+
+    async create(userId: string, data: CreateDeviceRequestT): Promise<{ id: string, secret: string }> {
+        const id = crypto.randomUUID();
+        const secret = generateDeviceSecret();
+
+        const device: typeof devicesTable.$inferInsert = {
+            deviceId: id,
+            secretHash: await hashSecret(secret),
+            userId: userId,
+            name: data.name,
+            description: data.description,
+            type: data.type
+        };
+
+        await db.insert(devicesTable).values([device]);
+
+        return { id, secret };
+    };
+
+    async edit(userId: string, deviceId: string, data: Partial<typeof devicesTable.$inferInsert>): Promise<number> {
+        const qr = await db.update(devicesTable)
+            .set(data)
+            .where(and(eq(devicesTable.deviceId, deviceId), eq(devicesTable.userId, userId)));
+
+        return qr.rowCount || 0;
+    }
+
+    async delete(userId: string, deviceId: string): Promise<number> {
+        const qr = await db.delete(devicesTable)
+            .where(and(eq(devicesTable.deviceId, deviceId), eq(devicesTable.userId, userId)));
+
+        return qr.rowCount || 0;
     }
 
     async checkSecret(deviceId: string, secret: string): Promise<string> {

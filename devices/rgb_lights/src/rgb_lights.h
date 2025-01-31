@@ -12,10 +12,14 @@
 
 class RGBLights : public hc::api::Device<hc::api::rgb_lights::State> {
   public:
+    struct CommandLineArgs {
+        std::string m_config_path;
+    };
+
     RGBLights() : Device("RGBLights"), m_loop_needs_reset(false) {}
     ~RGBLights() {}
 
-    bool init();
+    bool init(const CommandLineArgs& args);
 
     void shutdown();
 
