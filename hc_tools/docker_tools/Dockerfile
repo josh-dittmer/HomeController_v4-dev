@@ -59,7 +59,14 @@ RUN wget https://gigenet.dl.sourceforge.net/project/asio/asio/1.30.2%20%28Stable
     && ./configure \
     && make install
 
-RUN git clone git clone https://github.com/socketio/socket.io-client-cpp.git \
+RUN git clone https://github.com/Tencent/rapidjson.git \
+    && cd rapidjson \
+    && mkdir build \
+    && cd build \
+    && cmake .. \
+    && make install
+
+RUN git clone https://github.com/socketio/socket.io-client-cpp.git \
     && cd socket.io-client-cpp \
     && cmake ./ \
     && make install
@@ -69,13 +76,6 @@ RUN wget https://github.com/joan2937/pigpio/archive/master.zip \
     && rm master.zip \
     && cd pigpio-master \
     && make \
-    && make install
-
-RUN git clone https://github.com/Tencent/rapidjson.git \
-    && cd rapidjson \
-    && mkdir build \
-    && cd build \
-    && cmake .. \
     && make install
 
 RUN echo "/usr/local/lib" > "/etc/ld.so.conf.d/999local.conf"
