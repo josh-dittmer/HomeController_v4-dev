@@ -2,7 +2,7 @@ FROM ubuntu:latest
 LABEL Description="HomeController development environment"
 
 RUN apt -y update && apt install -y
-RUN apt install -y g++ make cmake git unzip python-setuptools python3-setuptools wget curl ca-certificates gdb
+RUN apt install -y g++ make cmake git unzip python-setuptools python3-setuptools wget curl ca-certificates gdb libssl-dev
 
 # install docker and docker compose
 
@@ -88,8 +88,8 @@ RUN rm -r asio-1.30.2
 RUN rm -r pigpio-master
 RUN rm -r rapidjson
 
-EXPOSE 3000
-EXPOSE 42069
+#EXPOSE 3000
+#EXPOSE 42069
 
 # keep container from immediately exiting
 
