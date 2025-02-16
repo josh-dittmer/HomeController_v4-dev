@@ -8,6 +8,9 @@ services:
         environment:
             SSH_AUTH_SOCK: "/run/host-services/ssh-auth.sock"
         container_name: "homecontroller_dev"
+        ports:
+            - 3000:3000
+            - 42069:42069
         networks:
             - hc_network
 
