@@ -2,7 +2,7 @@ FROM ubuntu:latest
 LABEL Description="HomeController development environment"
 
 RUN apt -y update && apt install -y
-RUN apt install -y g++ make cmake git unzip python-setuptools python3-setuptools wget curl ca-certificates gdb libssl-dev libglib2.0-dev
+RUN apt install -y g++ make cmake git unzip python-setuptools python3-setuptools wget curl ca-certificates gdb libssl-dev libglib2.0-dev libsystemd-dev
 
 # install docker and docker compose
 
@@ -77,6 +77,15 @@ RUN wget https://github.com/joan2937/pigpio/archive/master.zip \
     && cd pigpio-master \
     && make \
     && make install
+
+RUN git clone https://github.com/Kistler-Group/sdbus-cpp.git \
+    && cd sdbus-cpp \
+    && mkdir build \
+    && cd build \
+    && cmake .. -DCMAKE_BUILD_TYPE=RELEASE \
+    && cmake --build . \
+    && cmake --build . --target install
+
 
 RUN echo "/usr/local/lib" > "/etc/ld.so.conf.d/999local.conf"
 RUN ldconfig
