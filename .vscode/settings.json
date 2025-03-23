@@ -2,6 +2,11 @@
     "editor.tabSize": 4,
     "editor.insertSpaces": true,
     "editor.detectIndentation": false,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "explorer.autoReveal": false,
     "files.associations": {
         "condition_variable": "cpp",
         "memory": "cpp",
