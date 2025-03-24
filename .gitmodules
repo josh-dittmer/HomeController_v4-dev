@@ -7,3 +7,9 @@
 [submodule "HomeController_v4"]
 	path = HomeController_v4
 	url = https://github.com/josh-dittmer/HomeController_v4.git
+[submodule "HomeController_v4/"]
+	branch = main
+[submodule "libhomecontroller/"]
+	branch = main
+[submodule "RGBLights/"]
+	branch = main
