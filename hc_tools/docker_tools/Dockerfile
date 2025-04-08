@@ -2,7 +2,7 @@ FROM ubuntu:latest
 LABEL Description="HomeController development environment"
 
 RUN apt -y update && apt install -y
-RUN apt install -y g++ make cmake git unzip python3-setuptools wget curl ca-certificates gdb libssl-dev libglib2.0-dev libsystemd-dev
+RUN apt install -y g++ make cmake git unzip python3-setuptools wget curl ca-certificates gdb libssl-dev libglib2.0-dev libsystemd-dev bluez
 
 # install docker and docker compose
 

@@ -1,19 +1,22 @@
 services:
-    homecontroller_dev:
-        build: "."
-        volumes:
-            - "../..:/app"
-            - "/var/run/docker.sock:/var/run/docker.sock"
-            - "/run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock"
-        environment:
-            SSH_AUTH_SOCK: "/run/host-services/ssh-auth.sock"
-        container_name: "homecontroller_dev"
-        ports:
-            - 3000:3000
-            - 42069:42069
-        networks:
-            - hc_network
+  homecontroller_dev:
+    build: "."
+    volumes:
+      - "../..:/app"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/var/run/dbus/:/run/dbus/"
+      - "/run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock"
+    environment:
+      SSH_AUTH_SOCK: "/run/host-services/ssh-auth.sock"
+    container_name: "homecontroller_dev"
+    ports:
+      - 3000:3000
+      - 42069:42069
+    #networks:
+    #   - hc_network
+    network_mode: host
+    privileged: true
 
 networks:
-    hc_network:
-        external: true
+  hc_network:
+    external: true
