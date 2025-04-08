@@ -1,4 +1,78 @@
 {
+    "restoreTerminals.terminals": [
+        {
+            "splitTerminals": [
+                {
+                    "name": "hc_models",
+                    "commands": [
+                        "cd HomeController_v4/hc_models",
+                        "npm i",
+                        "npm run build",
+                        "npm link",
+                        "cd ../web && npm link hc_models",
+                        "cd ../hc_api && npm link hc_models",
+                        "cd ../hc_models",
+                    ]
+                },
+            ]
+        },
+        {
+            "splitTerminals": [
+                {
+                    "name": "web",
+                    "commands": [
+                        "cd HomeController_v4/web",
+                        "npm i",
+                        "npm run dev"
+                    ]
+                },
+            ]
+        },
+        {
+            "splitTerminals": [
+                {
+                    "name": "hc_api",
+                    "commands": [
+                        "cd HomeController_v4/hc_api",
+                        "npm i",
+                        "npm run start:dev"
+                    ]
+                }
+            ]
+        },
+        {
+            "splitTerminals": [
+                {
+                    "name": "libhomecontroller",
+                    "commands": [
+                        "cd libhomecontroller",
+                        "make",
+                        "make install",
+                        "cd ../RGBLights && make && make relink",
+                        "cd ../libhomecontroller"
+                    ]
+                },
+            ]
+        },
+        {
+            "splitTerminals": [
+                {
+                    "name": "RGBLights",
+                    "commands": [
+                        "cd RGBLights",
+                    ]
+                },
+            ]
+        },
+        {
+            "splitTerminals": [
+                {
+                    "name": "app",
+                    "commands": []
+                },
+            ]
+        },
+    ],
     "editor.tabSize": 4,
     "editor.insertSpaces": true,
     "editor.detectIndentation": false,
