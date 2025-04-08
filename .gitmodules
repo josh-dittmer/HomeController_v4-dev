@@ -1,9 +1,12 @@
 [submodule "RGBLights"]
 	path = RGBLights
 	url = https://github.com/josh-dittmer/RGBLights.git
+	branch = main
 [submodule "libhomecontroller"]
 	path = libhomecontroller
 	url = https://github.com/josh-dittmer/libhomecontroller.git
+	branch = main
 [submodule "HomeController_v4"]
 	path = HomeController_v4
 	url = https://github.com/josh-dittmer/HomeController_v4.git
+	branch = main
