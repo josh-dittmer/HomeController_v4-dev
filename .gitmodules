@@ -10,3 +10,6 @@
 	path = HomeController_v4
 	url = https://github.com/josh-dittmer/HomeController_v4.git
 	branch = main
+[submodule "Plug"]
+	path = Plug
+	url = git@github.com:josh-dittmer/Plug.git
